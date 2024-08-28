@@ -1,4 +1,4 @@
-# AI 绘画插件
+# 适用于MY_QBOT项目的AI 绘画插件（对应的worker和前端开源，任何人都可以使用）
 
 这个插件使用 Cloudflare Worker 和 Workers AI 来生成 AI 绘画。
 
