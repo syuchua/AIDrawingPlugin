@@ -14,7 +14,7 @@
   1. 克隆此仓库到你的插件目录。
   2. 安装依赖：`pip install -r requirements.txt`
 3. 在 Cloudflare 中部署 `worker.js`和`index.html`。
-4. 更新 `config.json` 中的 `api_url` 为你的 Cloudflare Worker URL。
+4. 更新 `config.json` 中的 `worker_url` 为你的 Cloudflare Worker URL。
 
 ## 使用
 
