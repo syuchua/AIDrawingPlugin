@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI绘画生成器</title>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f5a623;
+            --background-color: #f0f4f8;
+            --card-background: rgba(255, 255, 255, 0.8);
+            --text-color: #333;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Arial', sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: var(--card-background);
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-top: 20px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .image-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #aiImage {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        select, input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .random-btn {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>AI绘画生成器</h1>
+            <div class="image-container">
+                <img id="aiImage" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==" alt="AI生成的图片">
+            </div>
+            <select id="model">
+                <option value="dreamshaper-8-lcm">DreamShaper 8 LCM (快速)</option>
+                <option value="stable-diffusion-xl-base-1.0" selected>Stable Diffusion XL Base 1.0 (高质量)</option>
+                <option value="stable-diffusion-xl-lightning">Stable Diffusion XL Lightning (平衡)</option>
+            </select>
+            <input type="text" id="prompt" placeholder="请输入描述词...">
+            <div class="button-group">
+                <button type="button" class="random-btn" id="randomButton">随机提示词</button>
+                <button type="button" class="submit-btn" id="submitButton">生成图像</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const prompts = [
+            '1girl,solo,cute,in glass,atmosphere_X,best quality,beautiful,extremely detailed,masterpiece,very aesthetic',
+            'a girl,nahida,light,full body,symbol eye,in summer,day,in a meadow,sky,cirrus_fibratus,intense shadows,blonde hair,pleated_dress,collared_shirt,blue eyes,long hair,fang,smile',
+            '((best quality)), ((masterpiece)),A Chinese couple in Hanfu embracing on an arch bridge, a sky full of rose petals, a romantic atmosphere, a huge moon, colorful clouds, clouds, ethereal, reflections of water, a mirage, a breeze,(Chinese ink style)',
+            'simple background, flower, signature, no humans, sparkle, leaf, plant, white flower, black background, still life, embroidery',
+            '1 girl,(orange light effect),hair ornament,jewelry,looking at viewer,flower,floating hair,water,underwater,air bubble,submerged, 80sDBA style',
+            'masterpiece,best quality,high quality,loli,1girl, solo, long hair, looking at viewer, blush, bangs, thighhighs, dress, ribbon, brown eyes, very long hair, closed mouth, standing, full body, yellow eyes, white hair, short sleeves, outdoors, sky,no shoes, day, puffy sleeves, looking back, cloud, from behind, white dress, white thighhighs, red ribbon, tree, blue sky, puffy short sleeves, petals, cherry blossoms, skirt hold,',
+            '1 girl,Clothes in the shape of snowflake,render,technology, (best quality) (masterpiece), (highly in detailed), 4K,Official art, unit 8 k wallpaper, ultra detailed, masterpiece, best quality, extremely detailed,CG,low saturation, as style, line art',
+            'best quality,masterpiece,sculpture,wonderland,,chinese fairy tales,an old man,boiling tea,drink tea,a painting of history floating and curved in the background,mountain,white cloud,chinese style courtyard,pavilion,chinese tea mountains,, Chinese architecture, trees,,white hair ,',
+            '1girl, absurdres, arrow_(symbol), ata-zhubo, bicycle, billboard, black_eyes, black_hair, blue_sky, bridge, building, car, cardigan, city, cityscape, commentary_request, crosswalk, day, fire_hydrant, folding_bicycle, grey_cardigan, highres, lamppost, loafers, motor_vehicle, necktie, original, overpass, power_lines, railing, red_necktie, red_skirt, road, road_sign, scenery, school_uniform, shoes, short_hair, sign, skirt, sky, solo, stairs, standing, street, traffic_cone, traffic_light, truck, utility_pole, vending_machine',
+            '1girl, solo, elf, golden eyes, glowing eyes, slit_pupils, silver hair, green gradient hair, long hair, blunt bangs, brown capelet, frilled shirt, long sleeves, green brooch, pouch, belt, brown gloves, upper body, (chibi:0.4), (close-up), (broken:1.3),  half-closed eye, expressionless, from side,  depth of field, fallen leaves, side light, gingko, tree, masterpiece,bestquality, line art,',
+            'flower, outdoors, sky, tree, no humans, window, bird, building, scenery, house,oil painting style',
+        ];
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const submitButton = document.getElementById('submitButton');
+            const randomButton = document.getElementById('randomButton');
+            const promptInput = document.getElementById('prompt');
+            const modelSelect = document.getElementById('model');
+            const aiImage = document.getElementById('aiImage');
+
+            submitButton.addEventListener('click', generateImage);
+            randomButton.addEventListener('click', setRandomPrompt);
+
+            async function generateImage() {
+                const prompt = promptInput.value.trim();
+                if (!prompt) {
+                    alert('请输入描述词');
+                    return;
+                }
+
+                submitButton.disabled = true;
+                submitButton.textContent = '生成中...';
+
+                try {
+                    const response = await fetch(window.location.origin, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            model: modelSelect.value,
+                            prompt: prompt
+                        })
+                    });
+
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+                    const blob = await response.blob();
+                    const imageUrl = URL.createObjectURL(blob);
+                    aiImage.src = imageUrl;
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('生成图像时发生错误，请重试。');
+                } finally {
+                    submitButton.textContent = '生成图像';
+                    submitButton.disabled = false;
+                }
+            }
+
+            function setRandomPrompt() {
+                const randomIndex = Math.floor(Math.random() * prompts.length);
+                promptInput.value = prompts[randomIndex];
+            }
+        });
+    </script>
+</body>
+</html>
