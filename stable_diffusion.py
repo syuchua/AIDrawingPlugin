@@ -140,10 +140,20 @@ class AIDrawingPlugin(PluginBase):
         try:
             img = Image.open(BytesIO(image_data))
             filename = f"generated_image_{int(time.time())}.png"
-            file_path = os.path.join('data/image', filename)
-            img.save(file_path)
-            logger.info(f"图片已保存到: {file_path}")
-            return file_path
+            tmp_file_path = os.path.join(self.tmp_folder, filename)
+            img.save(tmp_file_path)
+            logger.info(f"图片已保存到: {tmp_file_path}")
+    
+            # 保存到目标目录
+            target_folder = '/app/data/image'
+            os.makedirs(target_folder, exist_ok=True)
+            target_file_path = os.path.join(target_folder, filename)
+    
+            # 使用 shutil.copy 复制文件
+            shutil.copy(tmp_file_path, target_file_path)
+            logger.info(f"图片已复制到: {target_file_path}")
+    
+            return target_file_path
         except Exception as e:
             logger.error(f"保存图片时发生错误: {str(e)}")
             raise
