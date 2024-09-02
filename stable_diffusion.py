@@ -140,7 +140,7 @@ class AIDrawingPlugin(PluginBase):
         try:
             img = Image.open(BytesIO(image_data))
             filename = f"generated_image_{int(time.time())}.png"
-            file_path = os.path.join('app/data/image', filename)
+            file_path = os.path.join('data/image', filename)
             img.save(file_path)
             logger.info(f"图片已保存到: {file_path}")
             return file_path
