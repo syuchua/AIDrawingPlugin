@@ -29,7 +29,7 @@ class AIDrawingPlugin(PluginBase):
         2. 使用常见词汇，按重要性排序，用逗号分隔。避免使用"-"或"."，但可以使用空格和自然语言。避免词汇重复。
 
         3. 强调关键词：
-           - 使用括号增加权重：(word)增加1.1倍，((word))增加1.21倍，(((word)))增加1.331倍
+           - 使用括号增加权重：(word)增加1.1倍， ((word))增加1.21倍， (((word)))增加1.331倍
            - 使用精确权重：(word:1.5)将权重增加1.5倍
            - 仅为重要标签增加权重
 
@@ -56,7 +56,7 @@ class AIDrawingPlugin(PluginBase):
         os.makedirs(self.tmp_folder, exist_ok=True)
 
     async def on_load(self):
-        self.worker_url = self.config.get('worker_url', "https://yourworker.dev")
+        self.worker_url = self.config.get('worker_url', "https://sd.yuchu.me")
         self.models = self.config.get('models', {
             "v1": "dreamshaper-8-lcm",
             "v2": "stable-diffusion-xl-base-1.0",
@@ -107,14 +107,8 @@ class AIDrawingPlugin(PluginBase):
                 file_url = await upload_file_for_plugin(image_path, 'image')
                 if file_url:
                     cq_code = f"[CQ:image,file={file_url}]"
-                    return {
-                        "type": "node",
-                        "data": {
-                            "name": "AI绘画",
-                            "uin": "2854196310",
-                            "content": f"{cq_code}\n已生成图片，原始提示词: {user_prompt}\n优化后的提示词: {optimized_prompt}\n使用模型: {model}"
-                        }
-                    }
+                    explanation = f"\n已生成图片，原始提示词: {user_prompt}\n优化后的提示词: {optimized_prompt}\n使用模型: {model}"
+                    return cq_code + explanation
                 else:
                     return "上传图片失败，请稍后再试。"
             else:
@@ -143,21 +137,20 @@ class AIDrawingPlugin(PluginBase):
             tmp_file_path = os.path.join(self.tmp_folder, filename)
             img.save(tmp_file_path)
             logger.info(f"图片已保存到: {tmp_file_path}")
-    
+
             # 保存到目标目录
-            target_folder = '/app/data/image'
-            os.makedirs(target_folder, exist_ok=True)
+            target_folder = 'data/image'
             target_file_path = os.path.join(target_folder, filename)
-    
+
             # 使用 shutil.copy 复制文件
             shutil.copy(tmp_file_path, target_file_path)
             logger.info(f"图片已复制到: {target_file_path}")
-    
+
             return target_file_path
         except Exception as e:
             logger.error(f"保存图片时发生错误: {str(e)}")
             raise
-            
+
     async def on_message(self, message):
         content = message.get('content', '')
         if isinstance(content, str):
