@@ -61,6 +61,9 @@ class AIDrawingPlugin(PluginBase):
             "v1": "dreamshaper-8-lcm",
             "v2": "stable-diffusion-xl-base-1.0",
             "v3": "stable-diffusion-xl-lightning"
+            "v4": "stable-diffusion-v1-5-img2img"
+            "v5": "stable-diffusion-v1-5-inpainting"
+            "v6": "flux-1-schnell"
         })
         self.save_config()
         #logger.info(f"{self.name} v{self.version} loaded")
@@ -80,7 +83,10 @@ class AIDrawingPlugin(PluginBase):
         return [
             {"name": "draw-v1", "description": "使用 dreamshaper-8-lcm 模型绘画"},
             {"name": "draw-v2", "description": "使用 stable-diffusion-xl-base-1.0 模型绘画"},
-            {"name": "draw-v3", "description": "使用 stable-diffusion-xl-lightning 模型绘画"}
+            {"name": "draw-v3", "description": "使用 stable-diffusion-xl-lightning 模型绘画"},
+            {"name": "draw-v4", "description": "使用 stable-diffusion-v1-5-img2img模型绘画"},
+            {"name": "draw-v5", "description": "使用 stable-diffusion-v1-5-inpainting模型绘画"},
+            {"name": "draw-v6", "description": "使用 flux-1-schnell模型绘画"}
         ]
 
     async def handle_command(self, command, args):
@@ -176,7 +182,10 @@ class AIDrawingPlugin(PluginBase):
             "AI绘画插件使用说明:\n"
             "/draw-v1 <提示词> - 使用 dreamshaper-8-lcm 模型\n"
             "/draw-v2 <提示词> - 使用 stable-diffusion-xl-base-1.0 模型\n"
-            "/draw-v3 <提示词> - 使用 stable-diffusion-xl-lightning 模型"
+            "/draw-v3 <提示词> - 使用 stable-diffusion-xl-lightning 模型\n"
+            "/draw-v4 <提示词> - 使用 stable-diffusion-v1-5-img2img 模型\n"
+            "/draw-v5 <提示词> - 使用 stable-diffusion-v1-5-inpainting 模型\n"
+            "/draw-v6 <提示词> - 使用 flux-1-schnell 模型"
         )
     async def generate_optimized_prompt(self, user_input):
         messages = MessageManager.insert_or_replace_system_message([], self.prompt_generation_system_message)
