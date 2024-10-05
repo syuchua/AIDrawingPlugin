@@ -60,9 +60,9 @@ class AIDrawingPlugin(PluginBase):
         self.models = self.config.get('models', {
             "v1": "dreamshaper-8-lcm",
             "v2": "stable-diffusion-xl-base-1.0",
-            "v3": "stable-diffusion-xl-lightning"
-            "v4": "stable-diffusion-v1-5-img2img"
-            "v5": "stable-diffusion-v1-5-inpainting"
+            "v3": "stable-diffusion-xl-lightning",
+            "v4": "stable-diffusion-v1-5-img2img",
+            "v5": "stable-diffusion-v1-5-inpainting",
             "v6": "flux-1-schnell"
         })
         self.save_config()
