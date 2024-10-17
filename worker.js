@@ -35,15 +35,6 @@ export default {
           case 'stable-diffusion-xl-lightning':
             model = '@cf/bytedance/stable-diffusion-xl-lightning';
             break;
-          case 'stable-diffusion-v1-5-img2img':
-            model = '@cf/runwayml/stable-diffusion-v1-5-img2img';
-            break;
-          case 'stable-diffusion-v1-5-inpainting':
-            model = '@cf/runwayml/stable-diffusion-v1-5-inpainting';
-            break;
-          case 'flux-1-schnell':
-            model = '@cf/black-forest-labs/flux-1-schnell';
-            break;
           default:
             break;
         }
