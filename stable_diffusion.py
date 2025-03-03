@@ -2,11 +2,7 @@
 import os, time, aiohttp, base64, re, shutil
 from io import BytesIO
 from PIL import Image
-from app.Core.message_utils import MessageManager
-from app.plugin.plugin_base import PluginBase
-from app.logger import logger
-from app.process.process_plugin import upload_file_for_plugin
-from utils.model_request import get_chat_response
+from qfurina.api import (PluginBase, upload_file_for_plugin, get_chat_response, MessageManager, logger)
 
 @PluginBase.register("ai_drawing")
 class AIDrawingPlugin(PluginBase):
@@ -56,7 +52,7 @@ class AIDrawingPlugin(PluginBase):
         os.makedirs(self.tmp_folder, exist_ok=True)
 
     async def on_load(self):
-        self.worker_url = self.config.get('worker_url', "https://your_worker.com")
+        self.worker_url = self.config.get('worker_url', "https://sd.yuchu.me")
         self.models = self.config.get('models', {
             "v1": "dreamshaper-8-lcm",
             "v2": "stable-diffusion-xl-base-1.0",
