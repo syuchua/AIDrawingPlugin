@@ -1,4 +1,4 @@
-# 适用于QFurina项目的AI 绘画插件（对应的worker和前端开源，任何人都可以使用）
+# 适用于QFurina项目的AI 绘画插件(附带一个简易的前端界面)
 
 这个插件使用 Cloudflare Worker 和 Workers AI 来生成 AI 绘画。
 
