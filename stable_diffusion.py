@@ -2,7 +2,11 @@
 import os, time, aiohttp, base64, re, shutil
 from io import BytesIO
 from PIL import Image
-from qfurina.api import (PluginBase, upload_file_for_plugin, get_chat_response, MessageManager, logger)
+from app.Core.message_utils import MessageManager
+from app.plugin.plugin_base import PluginBase
+from app.logger import logger
+from app.process.process_plugin import upload_file_for_plugin
+from utils.model_request import get_chat_response
 
 @PluginBase.register("ai_drawing")
 class AIDrawingPlugin(PluginBase):
